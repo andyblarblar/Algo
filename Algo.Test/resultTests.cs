@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Algo.Functional.Result;
 using static Algo.Functional.Result.ResultExtensions;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Algo.Test
 {
@@ -43,6 +44,8 @@ namespace Algo.Test
 
             //with no return value
             var single = Success<Exception>();
+
+            var l = new List<int>();
 
         }
     }

@@ -58,14 +58,14 @@ namespace Algo.Functional.Result
         /// </summary>
         public readonly bool IsError;
 
-        internal Result(TData data)
+        public Result(TData data)
         {
             IsError = false;
             _success = data;
             _error = default;
         }
 
-        internal Result(TError error)
+        public Result(TError error)
         {
             _error = error;
             IsError = true;

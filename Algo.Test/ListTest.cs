@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
 using NUnit.Framework;
-using List = Algo.Structures.List.List;
+using Algo.Structures.List;
+using System.Linq;
 
 namespace Algo.Test
 {
@@ -24,36 +22,14 @@ namespace Algo.Test
             }
 
             //list construction
-            var manualList = List.MakeList(1, 2, 3, 4, 5);
+            var manualList = new SLList<int>(1, 2, 3, 4, 5);
             //using IEnumerable
-            var list = List.MakeList(MakeInts());
+            var list = new SLList<int>(MakeInts());
 
-            //list deconstruction with the ~ operator
-            var (head, tail) = ~list;
-
-            Console.WriteLine(list[10]);
+            Console.WriteLine();
 
         }
 
-        [Test]
-        public void InsertTests()
-        {
-            var xs = List.MakeList(1, 2, 3, 4);
-            xs.Insert(1, 10);
-            Assert.True(xs[0] == 1);
-            Assert.True(xs[1] == 10);
-            Assert.True(xs[2] == 2);
-        }
-
-        [Test]
-        public void DeleteTests()
-        {
-            var xs = List.MakeList(1, 2, 3, 4);
-            xs.Delete(1);
-            Assert.True(xs[0] == 1);
-            Assert.True(xs[1] == 3);
-            Assert.True(xs[2] == 4);
-        }
 
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Algo.Functional.Result;
 
 namespace Algo.Structures.List
 {
@@ -10,19 +11,144 @@ namespace Algo.Structures.List
     /// <summary>
     /// A naive mutable singly linked list
     /// </summary>
-    public static class List
+    public class SLList<T> : IEnumerable<T>
     {
+        private Node<T> _internalList;
+
+        public int Length { get; private set; }
+
+        /// <summary>
+        /// Creates a list using the params
+        /// </summary>
+        public SLList(params T[] args)
+        {
+            var result = new Node<T>();
+
+            args.Aggregate(result, (list, data) =>
+            {
+                list.Data = data;
+                list.Rest = new Node<T>();
+                Length++;
+                return list.Rest;
+            });
+
+            _internalList = result;
+        }
+
+        /// <summary>
+        /// Eagerly consumes the IEnumerable and produces a list
+        /// </summary>
+        public SLList(IEnumerable<T> source)
+        {
+            var result = new Node<T>();
+
+            source.Aggregate(result, (list, data) =>
+            {
+                list.Data = data;
+                list.Rest = new Node<T>();
+                Length++;
+                return list.Rest;
+            });
+
+            _internalList = result;
+        }
+
+        public SLList()
+        { 
+        }
+
+        public T this[int i]
+        {
+            get
+            {
+                if (i > Length - 1) throw new IndexOutOfRangeException();
+
+                return _internalList[i];
+            }
+            set
+            {
+                if (i > Length - 1) throw new IndexOutOfRangeException();
+
+                _internalList[i] = value;
+            }
+        }
+
+        /// <summary>
+        /// Appends to the end of the list
+        /// </summary>
+        public void Add(T data)
+        {
+            _internalList ??= new Node<T>(data);
+            _internalList += new Node<T>(data);
+            Length++;
+        }
+
+        /// <summary>
+        /// Inserts an element at index, pushing back index behind the new node.
+        /// </summary>
+        public void InsertAt(int index, T value)
+        {
+            if(index > Length - 1) throw new IndexOutOfRangeException();
+
+            _internalList.Insert(index, value);
+            Length++;
+        }
+
+        /// <summary>
+        /// Deletes the node at index
+        /// </summary>
+        public void RemoveAt(int index)
+        {
+            if (index > Length - 1) throw new IndexOutOfRangeException();
+
+            _internalList.Delete(index);
+            Length--;
+        }
+
+        /// <summary>
+        /// Returns and removes the end of the list
+        /// </summary>
+        public Result<T, InvalidOperationException> Pop()
+        {
+            if (Length == 0)
+            {
+                return new Result<T, InvalidOperationException>(new InvalidOperationException("Stack is empty, Cannot pop"));
+            }
+
+            var result = new Result<T, InvalidOperationException>(_internalList[Length-1]);
+            _internalList.Delete(Length-1);
+            Length--;
+
+            return result;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            var current = _internalList;
+
+            while (true)
+            {
+                if (current.Rest is null) yield break;
+                yield return current.Data;
+                current = current.Rest;
+            }
+        }
+
         public class Node<T> : IEnumerable<T>
         {
             public T Data { get; set; }
             public Node<T> Rest { get; set; }
 
-            public int Length => this.Count() - 1;
-
             public Node(T data, Node<T> next = null)
             {
                 Data = data;
                 Rest = next;
+
             }
 
             public Node()
@@ -57,12 +183,10 @@ namespace Algo.Structures.List
                 return RecLastNode(this);
             }
 
-            public T this[uint i]
+            public T this[int i]
             {
                 get
                 {
-                    if (i > this.Count() - 1) throw new IndexOutOfRangeException();
-                        
                     var j = 0;
                     var acc = this;
 
@@ -76,8 +200,6 @@ namespace Algo.Structures.List
                 }
                 set
                 {
-                    if (i > this.Count() - 1) throw new IndexOutOfRangeException();
-                        
                     var j = 0;
                     var acc = this;
 
@@ -97,8 +219,6 @@ namespace Algo.Structures.List
             /// </summary>
             public void Insert(int index, T value)
             {
-                if (index > this.Count() - 1) throw new IndexOutOfRangeException();
-
                 var j = 0;
                 var acc = this;
 
@@ -121,8 +241,6 @@ namespace Algo.Structures.List
             /// </summary>
             public void Delete(int index)
             {
-                if (index > this.Count() - 1) throw new IndexOutOfRangeException();
-
                 var j = 0;
                 var acc = this;
 
@@ -168,41 +286,6 @@ namespace Algo.Structures.List
             }
 
             #endregion
-        }
-
-        /// <summary>
-        /// Creates a list using the params
-        /// </summary>
-        /// <returns>The head of the list</returns>
-        public static Node<T> MakeList<T>(params T[] args)
-        {
-            var result = new Node<T>();
-
-            args.Aggregate(result, (list, data) =>
-            {
-                list.Data = data;
-                list.Rest = new Node<T>();
-                return list.Rest;
-            });
-
-            return result;
-        }
-
-        /// <summary>
-        /// Eagerly consumes the IEnumerable and produces a list
-        /// </summary>
-        public static Node<T> MakeList<T>(IEnumerable<T> source)
-        {
-            var result = new Node<T>();
-
-            source.Aggregate(result, (list, data) =>
-            {
-                list.Data = data;
-                list.Rest = new Node<T>();
-                return list.Rest;
-            });
-
-            return result;
         }
     } 
 
