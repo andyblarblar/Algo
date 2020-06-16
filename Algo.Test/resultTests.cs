@@ -45,7 +45,8 @@ namespace Algo.Test
             //with no return value
             var single = Success<Exception>();
 
-            var l = new List<int>();
+            //returns 2
+            err.UnwrapSuccessOr(2);
 
         }
     }

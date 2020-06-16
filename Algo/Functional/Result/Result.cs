@@ -62,14 +62,14 @@ namespace Algo.Functional.Result
         {
             IsError = false;
             _success = data;
-            _error = default;
+            _error = default!; 
         }
 
         public Result(TError error)
         {
             _error = error;
             IsError = true;
-            _success = default;
+            _success = default!;
         }
 
         /// <summary>
@@ -125,6 +125,16 @@ namespace Algo.Functional.Result
         {
             if (!IsError) handle(_success);
             return this;
+        }
+
+        /// <summary>
+        /// Unwraps a success case or returns the passed alternate. 
+        /// </summary>
+        public TData UnwrapSuccessOr(TData alternate)
+        {
+            return IsError
+                ? alternate
+                : _success;
         }
 
     }

@@ -122,6 +122,17 @@ namespace Algo.Structures.List
             return result;
         }
 
+        /// <summary>
+        /// Returns the value at the end of the list
+        /// </summary>
+        public Result<T, InvalidOperationException> Peek()
+        {
+            return Length == 0 
+                ? new Result<T, InvalidOperationException>(new InvalidOperationException("Stack is empty, Cannot peek")) 
+                : new Result<T, InvalidOperationException>(_internalList[Length - 1]);
+        }
+
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -142,13 +153,12 @@ namespace Algo.Structures.List
         public class Node<T> : IEnumerable<T>
         {
             public T Data { get; set; }
-            public Node<T> Rest { get; set; }
+            public Node<T>? Rest { get; set; }
 
-            public Node(T data, Node<T> next = null)
+            public Node(T data, Node<T>? next = null)
             {
                 Data = data;
                 Rest = next;
-
             }
 
             public Node()
@@ -158,7 +168,7 @@ namespace Algo.Structures.List
             /// <summary>
             /// Returns (head,tail) for use in pattern matching
             /// </summary>
-            public static (Node<T>, Node<T>) operator ~(Node<T> node) => (node,node.Rest);
+            public static (Node<T>, Node<T>) operator ~(Node<T> node) => (node,node.Rest)!;
 
             /// <summary>
             /// Appends rhs to the end of lhs.
@@ -192,7 +202,7 @@ namespace Algo.Structures.List
 
                     while (i != j) 
                     {
-                        acc = acc.Rest;
+                        acc = acc!.Rest; //Cannot be null here as we expect bounds checking on the implementing class.
                         j++;
                     }
 
@@ -205,7 +215,7 @@ namespace Algo.Structures.List
 
                     while (i != j) 
                     {
-                        acc = acc.Rest;
+                        acc = acc!.Rest;
                         j++;
                     }
 
@@ -225,12 +235,12 @@ namespace Algo.Structures.List
                 //get the index before where we want to insert
                 while (index-1 != j)
                 {
-                    acc = acc.Rest;
+                    acc = acc!.Rest;
                     j++;
                 }
                 
                 //hold a ref to the list being pushed back
-                var temp = acc.Rest;
+                var temp = acc!.Rest;
 
                 //insert node and append the rest of list
                 acc.Rest = new Node<T>(value,temp);
@@ -247,12 +257,12 @@ namespace Algo.Structures.List
                 //get node before our node
                 while (index-1 != j)
                 {
-                    acc = acc.Rest;
+                    acc = acc!.Rest;
                     j++;
                 }
                 
                 //hold a ref to the list after node to be deleted 
-                var temp = acc.Rest.Rest;
+                var temp = acc!.Rest!.Rest;
 
                 //"Delete" the node. GC can handle the rest
                 acc.Rest = temp;

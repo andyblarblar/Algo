@@ -30,6 +30,15 @@ namespace Algo.Test
 
         }
 
+        [Test]
+        public void PopTest()
+        {
+            var list = new SLList<int>(1,2,3,4,5);
+            Assert.AreEqual(5, list.Pop().UnwrapSuccess());
+            Assert.AreEqual(4, list.Length); 
+
+        }
+
 
     }
 }

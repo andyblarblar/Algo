@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Andrew Ealovega</Authors>
+    <Company />
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
