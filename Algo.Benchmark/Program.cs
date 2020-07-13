@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System.IO;
 using BenchmarkDotNet.Running;
 
 namespace Algo.Benchmark
@@ -7,7 +8,7 @@ namespace Algo.Benchmark
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<AlgoListVSList>();
+            var summary = BenchmarkRunner.Run<SysPathVSAlgoPath>();
         }
     }
 }

@@ -5,6 +5,9 @@
     <Authors>Andrew Ealovega</Authors>
     <Company />
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>Avealov.Algo</PackageId>
+    <Description>Personal extentions to C#</Description>
   </PropertyGroup>
 
   <ItemGroup>
