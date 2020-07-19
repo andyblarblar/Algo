@@ -5,9 +5,11 @@
     <Authors>Andrew Ealovega</Authors>
     <Company />
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Avealov.Algo</PackageId>
     <Description>Personal extentions to C#</Description>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Add Path wrapper</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

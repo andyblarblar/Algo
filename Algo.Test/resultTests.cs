@@ -47,7 +47,6 @@ namespace Algo.Test
 
             //returns 2
             err.UnwrapSuccessOr(2);
-
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Algo.Structures.List;
 using System.Linq;
+using Algo.Functional.Result;
 
 namespace Algo.Test
 {

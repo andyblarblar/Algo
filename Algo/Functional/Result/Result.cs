@@ -58,6 +58,9 @@ namespace Algo.Functional.Result
         /// </summary>
         public readonly bool IsError;
 
+        /// <summary>
+        /// Creates a result in the success state
+        /// </summary>
         public Result(TData data)
         {
             IsError = false;
@@ -65,6 +68,9 @@ namespace Algo.Functional.Result
             _error = default!; 
         }
 
+        /// <summary>
+        /// Creates a result in the error state
+        /// </summary>
         public Result(TError error)
         {
             _error = error;
@@ -90,7 +96,10 @@ namespace Algo.Functional.Result
             return IsError ? _error : throw new InvalidOperationException("Attempted to unwrap a success as error");
         }
 
-        public Result<UData, TError> SelectMany<UData>(Func<TData, Result<UData, TError>> f) 
+        /// <summary>
+        /// Executes the passed lambda if this result is in the success state, else does nothing.
+        /// </summary>
+        public Result<UData, TError> SelectMany<UData>(Func<TData, Result<UData, TError>> f)
         {
             return !IsError
                 ? f(_success)
@@ -98,7 +107,7 @@ namespace Algo.Functional.Result
         }
         
         /// <summary>
-        /// Alias to SelectMany
+        /// Executes the passed lambda if this result is in the success state, else does nothing.
         /// </summary>
         public Result<UData, TError> FlatMap<UData>(Func<TData, Result<UData, TError>> f)
         {
@@ -136,12 +145,23 @@ namespace Algo.Functional.Result
                 ? alternate
                 : _success;
         }
+        
+        /// <summary>
+        /// Unwraps a error case or returns the passed alternate. 
+        /// </summary>
+        public TError UnwrapErrorOr(TError alternate)
+        {
+            return !IsError
+                ? alternate
+                : _error;
+        }
 
     }
 
     /// <summary>
     /// Result type for functions that have no meaningful return value. see <see cref="Result{TData,TError}"/> for more docs.
     /// </summary>
+    /// <remarks>Due to Result being a struct, the param-less constructor acts as the success case constructor.</remarks>
     /// <typeparam name="TError"></typeparam>
     public readonly struct Result<TError>
     {
@@ -149,7 +169,7 @@ namespace Algo.Functional.Result
 
         public readonly bool IsError;
 
-        internal Result(TError err)
+        public Result(TError err)
         {
             IsError = true;
             _error = err;
@@ -164,18 +184,20 @@ namespace Algo.Functional.Result
             return IsError ? _error : throw new InvalidOperationException("cannot unwrap if there is no error");
         }
 
+        /// <summary>
+        /// Executes the passed lambda if this result is in the success state, else does nothing.
+        /// </summary>
         public Result<TError> SelectMany(Func<Result<TError>> f)
         {
             return !IsError
                 ? f()
                 : new Result<TError>(_error);
         }
-        
+
         /// <summary>
-        /// Alias to SelectMany
+        /// Executes the passed lambda if this result is in the success state, else does nothing.
         /// </summary>
-        /// <param name="f"></param>
-        public Result<TError> AndThen(Func<Result<TError>> f)
+        public Result<TError> FlatMap(Func<Result<TError>> f)
         {
             return SelectMany(f);
         }
