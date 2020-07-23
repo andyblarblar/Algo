@@ -6,11 +6,8 @@ using System.Text;
 
 namespace Algo.Structures.Heap
 {
-    /// <summary>
-    /// MaxHeap capible of containing any object that overrides the greater than and less than operators.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class MaxHeap<T> 
+    
+    public class MaxHeap<T> where T : IComparable<T>
     {
         private readonly T[] _arr;
         public int HeapSize { get; private set; }
@@ -47,7 +44,7 @@ namespace Algo.Structures.Heap
             _arr[i] = key;
 
             //Max-heapify
-            while (i != 0 && (dynamic)_arr[Parent(i)] < (dynamic)_arr[i])
+            while (i != 0 && _arr[Parent(i)].CompareTo(_arr[i]) < 0)
             {
                 (_arr[i], _arr[Parent(i)]) = (_arr[Parent(i)], _arr[i]);
                 i = Parent(i);
@@ -56,17 +53,17 @@ namespace Algo.Structures.Heap
             return this;
         }
 
-        public MaxHeap<T> DecreaseKey(int i, T val)
+        private MaxHeap<T> ChangeKey(int i, T val)
         {
             _arr[i] = val;
 
-            //Max-heapify
-            while (i != 0 && (dynamic) _arr[Parent(i)] < (dynamic) _arr[i])
+            //Max-heapify subtree
+            while (i != 0 && _arr[Parent(i)].CompareTo(_arr[i]) < 0)
             {
                 (_arr[i], _arr[Parent(i)]) = (_arr[Parent(i)], _arr[i]);
                 i = Parent(i);
             }
-
+            
             return this;
         }
 
@@ -93,7 +90,7 @@ namespace Algo.Structures.Heap
 
         public MaxHeap<T> DeleteKey(int i)
         {
-            DecreaseKey(i, default(T));
+            ChangeKey(i, default(T));
             ExtractMax();
 
             return this;
@@ -111,8 +108,8 @@ namespace Algo.Structures.Heap
                 var r = Right(i);
                 var largest = i;
 
-                if (l < HeapSize && (dynamic)_arr[l] > (dynamic)_arr[i]) largest = l;
-                if (r < HeapSize && (dynamic) _arr[r] > (dynamic) _arr[largest]) largest = r;
+                if (l < HeapSize && _arr[l].CompareTo(_arr[i]) > 0) largest = l;
+                if (r < HeapSize &&  _arr[r].CompareTo(_arr[largest]) > 0) largest = r;
 
                 if (largest != i)
                 {

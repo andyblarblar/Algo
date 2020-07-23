@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Algo.Extentions;
 using Algo.Structures.Heap;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Algo.Test
 {
@@ -52,12 +54,46 @@ namespace Algo.Test
         [Test]
         public void Remove()
         {
-            var heap = new MaxHeap<int>(new int[]{1,5,3,4,0,0,0,0});
+            var heap = new MaxHeap<int>(new int[]{1,566,3,4,123123,0,0,0});
+           
+            Console.WriteLine(heap);
 
-            heap.DeleteKey(MaxHeap<int>.Parent(2));
+            heap.DeleteKey(0);
 
             Console.WriteLine(heap);
             Assert.AreEqual(4,heap.Max);
+
+        }
+
+        [Test]
+        public void NonIntTest()
+        {
+            var heap = new MaxHeap<string>(new string[20]);
+
+            heap.InsertKey("sup")
+                .InsertKey("supp")
+                .InsertKey("suppp")
+                .InsertKey("hi");
+
+            Console.WriteLine(heap);
+            Assert.AreEqual("suppp", heap.ExtractMax());
+            Console.WriteLine(heap);
+
+            var arr = new List<int>{1,2,4,7,100,34,566};
+
+            var heap2 = new MaxHeap<int>(arr.ToArray());
+
+            Console.WriteLine(heap2);
+
+
+            arr.ForEach(i => Console.Write(i+","));
+            Console.WriteLine();
+
+            arr.HeapSort();
+
+            arr.ForEach(i => Console.Write(i+","));
+
+
         }
 
 
