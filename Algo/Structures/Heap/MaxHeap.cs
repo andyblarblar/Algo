@@ -17,105 +17,97 @@ namespace Algo.Structures.Heap
         /// </summary>
         public T Max => _arr[0];
 
-        public MaxHeap(T[] data)
+        public int Capacity => _arr.Length;
+
+        public MaxHeap(int size)
         {
-            _arr = data;
-            HeapSize = data.Count(i => i != null && !i.Equals(default(T)));
-            MaxHeapify(0);
+            _arr = new T[size];
+            HeapSize = 0;
         }
 
         public static int Parent(int i) { return (i - 1) / 2; }
 
-        // to get index of left child of node at index i 
         public static int Left(int i) { return (2 * i + 1); }
 
-        // to get index of right child of node at index i 
         public static int Right(int i) { return (2 * i + 2); }
 
-        public MaxHeap<T> InsertKey(T key)
+        /// <summary>
+        /// Inserts a new key to the heap.
+        /// </summary>
+        /// <exception cref="OutOfMemoryException">thrown if heap is out of space.</exception>
+        public MaxHeap<T> Insert(T key)
         {
-            if (HeapSize == _arr.Length)
-            {
-                throw new InternalBufferOverflowException("heap is at size limit. Try passing a longer array.");
-            }
+             if (HeapSize == Capacity)
+             {
+                throw new OutOfMemoryException("Heap is out of space");
+             }
 
-            HeapSize++;
-            var i = HeapSize - 1;
-            _arr[i] = key;
+             //insert elm at end of heap
+             if (HeapSize == 0)
+             {
+                 _arr[HeapSize] = key;
+             }
+             else
+             {
+                 _arr[HeapSize] = key;
+             }
 
-            //Max-heapify
-            while (i != 0 && _arr[Parent(i)].CompareTo(_arr[i]) < 0)
-            {
-                (_arr[i], _arr[Parent(i)]) = (_arr[Parent(i)], _arr[i]);
-                i = Parent(i);
-            }
-
-            return this;
-        }
-
-        private MaxHeap<T> ChangeKey(int i, T val)
-        {
-            _arr[i] = val;
-
-            //Max-heapify subtree
-            while (i != 0 && _arr[Parent(i)].CompareTo(_arr[i]) < 0)
-            {
-                (_arr[i], _arr[Parent(i)]) = (_arr[Parent(i)], _arr[i]);
-                i = Parent(i);
-            }
-            
-            return this;
-        }
-
-        public T ExtractMax()
-        {
-            if (HeapSize <= 0)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (HeapSize == 1)
-            {
-                HeapSize--;
-                return _arr[0];
-            }
-
-            var root = _arr[0];
-            _arr[0] = _arr[HeapSize - 1];
-            HeapSize--;
-            MaxHeapify(0);
-
-            return root;
-        }
-
-        public MaxHeap<T> DeleteKey(int i)
-        {
-            ChangeKey(i, default(T));
-            ExtractMax();
-
-            return this;
+             //Bubble up
+             var acc = HeapSize;
+             while (_arr[acc].CompareTo(_arr[Parent(acc)]) > 0)
+             {
+                 (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
+                 acc = Parent(acc);
+             }
+             //increment here to avoid messing up index operations
+             HeapSize++;
+             return this;
         }
 
         /// <summary>
-        /// MaxHeapifys the tree at parent i
+        /// Returns and deletes the root of this heap
         /// </summary>
-        /// <param name="i"></param>
-        private void MaxHeapify(int i)
+        /// <exception cref="InvalidOperationException">thrown if heap is empty</exception>
+        public T ExtractMax()
+        {
+            if(HeapSize == 0) throw new InvalidOperationException("heap is empty");
+
+            var root = _arr[0];
+            _arr[0] = _arr[HeapSize];
+            MaxHeapify(0);
+            HeapSize--;
+            return root;
+        }
+
+        /// <summary>
+        /// Heapifys the subtree at index. "Bubble down"
+        /// </summary>
+        private void MaxHeapify(int index)
         {
             while (true)
             {
-                var l = Left(i);
-                var r = Right(i);
-                var largest = i;
-
-                if (l < HeapSize && _arr[l].CompareTo(_arr[i]) > 0) largest = l;
-                if (r < HeapSize &&  _arr[r].CompareTo(_arr[largest]) > 0) largest = r;
-
-                if (largest != i)
+                //If leaf, then break
+                if (Left(index) > HeapSize)
                 {
-                    (_arr[i], _arr[largest]) = (_arr[largest], _arr[i]);
-                    i = largest;
-                    continue;
+                    break;
+                }
+
+                //if either child is greater than parent,
+                if (_arr[index].CompareTo(_arr[Left(index)]) < 0 || _arr[index].CompareTo(_arr[Right(index)]) < 0)
+                {
+                    //then swap the larger child with parent and run again
+                    if (_arr[Left(index)].CompareTo(_arr[Right(index)]) > 0)
+                    {
+                        (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
+                        index = Left(index);
+                        continue;
+                    }
+                    else
+                    {
+                        (_arr[index], _arr[Right(index)]) = (_arr[Right(index)], _arr[index]);
+                        index = Right(index);
+                        continue;
+                    }
                 }
 
                 break;
@@ -143,5 +135,17 @@ namespace Algo.Structures.Heap
 
             return sb.ToString();
         }
+
+        public void CopyTo(IList<T> arr, int index)
+        {
+            var acc = 0;
+            foreach (var i in _arr)
+            {
+                arr[index + acc] = i;
+                acc++;
+            }
+
+        }
+
     }
 }
