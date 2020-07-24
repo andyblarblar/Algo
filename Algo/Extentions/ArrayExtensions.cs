@@ -8,7 +8,7 @@ namespace Algo.Extentions
     public static class ArrayExtensions
     {
         /// <summary>
-        /// The worst heap-sort known to man.
+        /// Sorts the list from highest to lowest using a heap.
         /// </summary>
         public static void HeapSort<T>(this IList<T> arr) where T : IComparable<T>
         {
@@ -19,6 +19,18 @@ namespace Algo.Extentions
             }
          
             heap.CopyTo(arr,0);
+        }
+
+        /// <summary>
+        /// Applies action across the collection.
+        /// </summary>
+        public static void ForEach<T>(this IList<T> arr, Action<T> action)
+        {
+            for (var i = 0; i < arr.Count; i++)
+            {
+                action(arr[i]);
+            }
+
         }
 
 

@@ -6,7 +6,10 @@ using System.Text;
 
 namespace Algo.Structures.Heap
 {
-    
+    /// <summary>
+    /// A binomial max-heap
+    /// </summary>
+    /// <typeparam name="T">type of key used in this heap.</typeparam>
     public class MaxHeap<T> where T : IComparable<T>
     {
         private readonly T[] _arr;
@@ -136,6 +139,9 @@ namespace Algo.Structures.Heap
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Copies the array representation of this heap to the passed list. 
+        /// </summary>
         public void CopyTo(IList<T> arr, int index)
         {
             var acc = 0;
@@ -144,7 +150,6 @@ namespace Algo.Structures.Heap
                 arr[index + acc] = i;
                 acc++;
             }
-
         }
 
     }
