@@ -128,7 +128,7 @@ namespace Algo.Structures.Heap
         /// </summary>
         public int Search(T val) => _arr.BinarySearch(val);
 
-        public bool Contains<T>(T obj) => _arr.Any(i => i.Equals(obj));
+        public bool Contains(T obj) => _arr.Any(i => i.Equals(obj));
 
         /// <summary>
         /// Heapifys the subtree at index. "Bubble down"

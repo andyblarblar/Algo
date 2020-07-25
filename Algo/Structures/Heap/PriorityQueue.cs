@@ -42,6 +42,7 @@ namespace Algo.Structures.Heap
         {
             var old = new QueueNode<T>(oldVal.Item1, oldVal.Item2);
             var index = _heap.Search(old);
+            Console.WriteLine(index);
             _heap.ChangeValue(index, new QueueNode<T>(old.Data, newPri));
         }
 
@@ -78,7 +79,7 @@ namespace Algo.Structures.Heap
             }
         }
 
-        public bool Contains<T>(T obj,int priority) => _heap.Contains(new QueueNode<T>(obj,priority));
+        public bool Contains(T obj,int priority) => _heap.Contains(new QueueNode<T>(obj,priority));
 
         /// <summary>
         /// Copies the array representation of this priority queues heap to a new List.
@@ -115,6 +116,11 @@ namespace Algo.Structures.Heap
 
             public int CompareTo(QueueNode<T> other)
             {
+                if((Data?.Equals(other.Data) ?? false) && Priority == other.Priority)
+                {
+                    return 0;
+                }
+
                 return Priority.CompareTo(other.Priority);
             }
 

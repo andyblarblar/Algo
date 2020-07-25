@@ -33,7 +33,11 @@ namespace Algo.Extentions
             }
         }
 
-        public static int BinarySearch<T>(this Array arr, T obj) => Array.BinarySearch(arr, obj);
+        ///<summary>
+        ///Extention of:
+        /// <see cref="Array.BinarySearch(Array, object)"/>
+        /// </summary>
+        public static int BinarySearch<T>(this T[] arr, T obj) => Array.BinarySearch<T>(arr, obj);
 
 
 

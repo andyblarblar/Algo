@@ -63,6 +63,14 @@ namespace Algo.Test
                 .Add("hiii", 4)
                 .Add("hiiii", 5);
 
+            pq.ChangePriority(("hii", 3), 4);
+            Console.WriteLine(pq.Poll());
+            Console.WriteLine(pq.Poll()); 
+            Console.WriteLine(pq.Poll());
+            Console.WriteLine(pq.Poll());
+            Console.WriteLine(pq.Poll());
+
+
         }
 
 
