@@ -51,7 +51,17 @@ namespace Algo.Test
                 .Insert(29)
                 .Insert(12309);
             Console.WriteLine(heap);
-
+        }
+        
+        [Test]
+        public void PriorityQueueTest()
+        {
+            var pq = new PriorityQueue<string>(1000);
+            pq.Add("hi", 2)
+                .Add("hii", 3)
+                .Add("hii", 3)
+                .Add("hiii", 4)
+                .Add("hiiii", 5);
 
         }
 

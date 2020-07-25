@@ -12,7 +12,7 @@ namespace Algo.Structures.Heap
     /// <typeparam name="T">type of key used in this heap.</typeparam>
     public class MaxHeap<T> where T : IComparable<T>
     {
-        private readonly T[] _arr;
+        private T[] _arr;
         public int HeapSize { get; private set; }
 
         /// <summary>
@@ -82,6 +82,8 @@ namespace Algo.Structures.Heap
             return root;
         }
 
+        public bool Contains<T>(T obj) => _arr.Any(i => i.Equals(obj));
+
         /// <summary>
         /// Heapifys the subtree at index. "Bubble down"
         /// </summary>
@@ -115,6 +117,30 @@ namespace Algo.Structures.Heap
 
                 break;
             }
+        }
+
+        /// <summary>
+        /// Removes all elements in the heap for reuse.
+        /// </summary>
+        public void Clear()
+        {
+            for (var i = 0; i < _arr.Length; i++)
+            {
+                _arr[i] = default!;
+            }
+
+            HeapSize = 0;
+        }
+
+        /// <summary>
+        /// Expands this heaps capacity to newSize
+        /// </summary>
+        /// <param name="newSize"></param>
+        public void ExpandSizeTo(int newSize)
+        {
+            var newArr = new T[newSize];
+            _arr.CopyTo(newArr,0);
+            _arr = newArr;
         }
 
         public override string ToString()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Algo.Structures.Heap;
 
@@ -24,14 +25,16 @@ namespace Algo.Extentions
         /// <summary>
         /// Applies action across the collection.
         /// </summary>
-        public static void ForEach<T>(this IList<T> arr, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T> arr, Action<T> action)
         {
-            for (var i = 0; i < arr.Count; i++)
+            foreach (var t in arr)
             {
-                action(arr[i]);
+                action(t);
             }
-
         }
+
+
+
 
 
 
