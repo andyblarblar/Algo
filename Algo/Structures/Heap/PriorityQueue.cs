@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Algo.Extentions;
 
 namespace Algo.Structures.Heap
 {
@@ -32,6 +33,28 @@ namespace Algo.Structures.Heap
         /// Returns and removes the highest priority item
         /// </summary>
         public T Poll() => _heap.ExtractMax().Data;
+
+        /// <summary>
+        /// Changes the value of a node oldVal to a new priority.
+        /// </summary>
+        /// <param name="oldVal">the value to change in (data,priority)</param>
+        public void ChangePriority((T,int) oldVal,int newPri)
+        {
+            var old = new QueueNode<T>(oldVal.Item1, oldVal.Item2);
+            var index = _heap.Search(old);
+            _heap.ChangeValue(index, new QueueNode<T>(old.Data, newPri));
+        }
+
+        /// <summary>
+        /// Removes the first found value of oldVal.
+        /// </summary>
+        /// <param name="oldVal">the item to find, (data,priority)</param>
+        public void Remove((T, int) oldVal)
+        {
+            var val = new QueueNode<T>(oldVal.Item1, oldVal.Item2);
+            var index = _heap.Search(val);
+            _heap.Remove(index);
+        }
 
         /// <summary>
         /// Removes all the contents of this queue

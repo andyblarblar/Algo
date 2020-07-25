@@ -33,6 +33,8 @@ namespace Algo.Extentions
             }
         }
 
+        public static int BinarySearch<T>(this Array arr, T obj) => Array.BinarySearch(arr, obj);
+
 
 
 

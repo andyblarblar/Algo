@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Algo.Extentions;
 
 namespace Algo.Structures.Heap
 {
@@ -55,16 +56,56 @@ namespace Algo.Structures.Heap
                  _arr[HeapSize] = key;
              }
 
-             //Bubble up
-             var acc = HeapSize;
-             while (_arr[acc].CompareTo(_arr[Parent(acc)]) > 0)
-             {
-                 (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
-                 acc = Parent(acc);
-             }
+            BubbleUp(HeapSize);
+
              //increment here to avoid messing up index operations
              HeapSize++;
              return this;
+        }
+
+        /// <summary>
+        /// Changes the key at index to a new value, then restores heap.
+        /// The new value must be different from the old value. 
+        /// </summary>
+        public void ChangeValue(int index, T newVal)
+        {
+            var biggerThanOldVal = newVal.CompareTo(_arr[index]) > 0;
+
+            _arr[index] = newVal;
+
+            //Restore heap invarient
+            if (biggerThanOldVal)
+            {
+                BubbleUp(index);
+            }
+            else
+            {
+                MaxHeapify(index);
+            }
+
+        }
+
+        /// <summary>
+        /// Removes the key at index and fixes the heap.
+        /// </summary>
+        public MaxHeap<T> Remove(int index) 
+        {
+            ChangeValue(index, default!);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Bubbles up the selected node.
+        /// </summary>
+        private void BubbleUp(int startingIndex)
+        {
+            var acc = startingIndex;
+            while (_arr[acc].CompareTo(_arr[Parent(acc)]) > 0)
+            {
+                (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
+                acc = Parent(acc);
+            }
         }
 
         /// <summary>
@@ -81,6 +122,11 @@ namespace Algo.Structures.Heap
             HeapSize--;
             return root;
         }
+
+        /// <summary>
+        /// Searches the heap for the index of val. If val does not exist, then a negitive number is returned.
+        /// </summary>
+        public int Search(T val) => _arr.BinarySearch(val);
 
         public bool Contains<T>(T obj) => _arr.Any(i => i.Equals(obj));
 
