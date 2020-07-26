@@ -13,33 +13,64 @@ namespace Algo.Structures.Heap
     /// <typeparam name="T">type of key used in this heap.</typeparam>
     public class MaxHeap<T> where T : IComparable<T>
     {
+        /// <summary>
+        /// The array representation of this heap.
+        /// </summary>
         private T[] _arr;
+
+        /// <summary>
+        /// Sets weather the whole internal array is printed in ToString. 
+        /// </summary>
+        private readonly bool _debug;
+
+        /// <summary>
+        /// Current number of nodes in heap.
+        /// </summary>
         public int HeapSize { get; private set; }
 
         /// <summary>
-        /// Returns the maximum key in the heap
+        /// Returns the maximum key in the heap.
         /// </summary>
         public T Max => _arr[0];
 
+        /// <summary>
+        /// The current maximum amount of nodes allowed in heap.
+        /// </summary>
         public int Capacity => _arr.Length;
 
-        public MaxHeap(int size)
+        /// <summary>
+        /// Creates a new empty max-heap.
+        /// </summary>
+        /// <param name="size">The starting size of the heap.</param>
+        /// <param name="debug">Prints the whole internal array if set.</param>
+        public MaxHeap(int size, bool debug = false)
         {
+            this._debug = debug;
             _arr = new T[size];
             HeapSize = 0;
         }
 
+        /// <summary>
+        /// Finds the index of the parent node of node at index i.
+        /// </summary>
         public static int Parent(int i) { return (i - 1) / 2; }
 
+        /// <summary>
+        /// Finds the index of the Left child node of node at index i.
+        /// </summary>
         public static int Left(int i) { return (2 * i + 1); }
 
+        /// <summary>
+        /// Finds the index of the Right child node of node at index i.
+        /// </summary>
         public static int Right(int i) { return (2 * i + 2); }
 
         /// <summary>
-        /// Inserts a new key to the heap.
+        /// Inserts a new key into the heap.
         /// </summary>
+        /// <returns>The index of the inserted key.</returns>
         /// <exception cref="OutOfMemoryException">thrown if heap is out of space.</exception>
-        public MaxHeap<T> Insert(T key)
+        public int Insert(T key)
         {
              if (HeapSize == Capacity)
              {
@@ -56,49 +87,44 @@ namespace Algo.Structures.Heap
                  _arr[HeapSize] = key;
              }
 
-            BubbleUp(HeapSize);
+             var index = BubbleUp(HeapSize);
 
              //increment here to avoid messing up index operations
              HeapSize++;
-             return this;
+             return index;
         }
 
         /// <summary>
         /// Changes the key at index to a new value, then restores heap.
         /// The new value must be different from the old value. 
         /// </summary>
-        public void ChangeValue(int index, T newVal)
+        /// <returns>The new index of the key.</returns>
+        public int ChangeValue(int index, T newVal)
         {
             var biggerThanOldVal = newVal.CompareTo(_arr[index]) > 0;
 
             _arr[index] = newVal;
 
-            //Restore heap invarient
-            if (biggerThanOldVal)
-            {
-                BubbleUp(index);
-            }
-            else
-            {
-                MaxHeapify(index);
-            }
-
+            //Restore heap invariant
+            return biggerThanOldVal 
+                ? BubbleUp(index) 
+                : MaxHeapify(index);
         }
 
         /// <summary>
         /// Removes the key at index and fixes the heap.
         /// </summary>
-        public MaxHeap<T> Remove(int index) 
-        {
+        public void Remove(int index)
+        { 
             ChangeValue(index, default!);
-
-            return this;
+            HeapSize--;
         }
 
         /// <summary>
         /// Bubbles up the selected node.
         /// </summary>
-        private void BubbleUp(int startingIndex)
+        /// <returns>The new index of the key.</returns>
+        private int BubbleUp(int startingIndex)
         {
             var acc = startingIndex;
             while (_arr[acc].CompareTo(_arr[Parent(acc)]) > 0)
@@ -106,10 +132,12 @@ namespace Algo.Structures.Heap
                 (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
                 acc = Parent(acc);
             }
+
+            return acc;
         }
 
         /// <summary>
-        /// Returns and deletes the root of this heap
+        /// Returns and deletes the root of the heap.
         /// </summary>
         /// <exception cref="InvalidOperationException">thrown if heap is empty</exception>
         public T ExtractMax()
@@ -124,16 +152,33 @@ namespace Algo.Structures.Heap
         }
 
         /// <summary>
-        /// Searches the heap for the index of val. If val does not exist, then a negitive number is returned.
+        /// Searches the heap for index of passed key.
         /// </summary>
-        public int Search(T val) => _arr.BinarySearch(val);
+        /// <param name="obj">The key to search for.</param>
+        /// <returns>The index of the key if found, otherwise -1.</returns>
+        public int Search(T obj)
+        {
+            if (obj.CompareTo(_arr[0]) > 0) return -1;
 
-        public bool Contains(T obj) => _arr.Any(i => i.Equals(obj));
+            for (var i = 0; i < _arr.Length; i++)//TODO optimize? currently O(n) worst case. 
+            {
+                if (_arr[i].CompareTo(obj) == 0) return i;
+            }
+
+            return -1;
+        }
 
         /// <summary>
-        /// Heapifys the subtree at index. "Bubble down"
+        /// Searches for the presence of a key in heap.
         /// </summary>
-        private void MaxHeapify(int index)
+        public bool Contains(T obj) => Search(obj) != -1;
+        
+        /// <summary>
+        /// Heapifys the subtree at index. "Bubble down".
+        /// Assumes both subtrees are already valid heaps.
+        /// </summary>
+        /// <returns>The new index of the node previously at index.</returns>
+        private int MaxHeapify(int index)
         {
             while (true)
             {
@@ -163,6 +208,8 @@ namespace Algo.Structures.Heap
 
                 break;
             }
+
+            return index;
         }
 
         /// <summary>
@@ -179,11 +226,13 @@ namespace Algo.Structures.Heap
         }
 
         /// <summary>
-        /// Expands this heaps capacity to newSize
+        /// Expands this heaps capacity to a new size.
         /// </summary>
-        /// <param name="newSize"></param>
+        /// <param name="newSize">The new size of the heap. Must be larger than current capacity</param>
+        /// <exception cref="InvalidOperationException">Thrown if newSize is an invalid size.</exception>
         public void ExpandSizeTo(int newSize)
         {
+            if(newSize < Capacity) throw new InvalidOperationException("Cannot shrink heap.");
             var newArr = new T[newSize];
             _arr.CopyTo(newArr,0);
             _arr = newArr;
@@ -199,7 +248,7 @@ namespace Algo.Structures.Heap
 
             foreach (var i in _arr)
             {
-                if (acc == HeapSize) break;
+                if (!_debug && acc == HeapSize) break;
 
                 sb.Append(i);
                 sb.Append(',');
@@ -212,17 +261,9 @@ namespace Algo.Structures.Heap
         }
 
         /// <summary>
-        /// Copies the array representation of this heap to the passed list. 
+        /// Copies the array representation of this heap to the passed array
         /// </summary>
-        public void CopyTo(IList<T> arr, int index)
-        {
-            var acc = 0;
-            foreach (var i in _arr)
-            {
-                arr[index + acc] = i;
-                acc++;
-            }
-        }
+        public void CopyTo(T[] arr, int index) => _arr.CopyTo(arr, index);
 
     }
 }
