@@ -14,15 +14,16 @@ namespace Algo.Structures.Heap
         /// <summary>
         /// The internal heap.
         /// </summary>
-        private readonly MaxHeap<QueueNode<T>> _heap;
+        private readonly IHeap<QueueNode<T>> _heap;
 
         /// <summary>
         /// Creates a new priority queue.
         /// </summary>
         /// <param name="size">The starting size of this queue</param>
-        public PriorityQueue(int size = 10)
+        public PriorityQueue(bool MaxBased, int size = 10)
         {
-            _heap = new MaxHeap<QueueNode<T>>(size);
+            if (MaxBased) _heap = new MaxHeap<QueueNode<T>>(size);
+            else _heap = new MinHeap<QueueNode<T>>(size);
         }
         
         /// <summary>
@@ -66,14 +67,14 @@ namespace Algo.Structures.Heap
         /// <summary>
         /// Returns the highest priority item.
         /// </summary>
-        public T Peek() => _heap.Max.Data;
+        public T Peek() => _heap.Root.Data;
 
         /// <summary>
         /// Returns and removes the highest priority item.
         /// </summary>
         public T Poll()
         {
-            return _heap.ExtractMax().Data;
+            return _heap.ExtractRoot().Data;
         }
 
         /// <summary>

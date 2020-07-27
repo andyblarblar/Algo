@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using Algo.Extentions;
+
 
 namespace Algo.Structures.Heap
 {
     /// <summary>
-    /// A binomial max-heap
+    /// A binomial min-heap
     /// </summary> 
     /// <typeparam name="T">type of key used in this heap.</typeparam>
-    public class MaxHeap<T> : IHeap<T> where T : IComparable<T>
+    public class MinHeap<T> : IHeap<T> where T : IComparable<T>
     {
         /// <summary>
         /// The array representation of this heap.
@@ -29,7 +26,7 @@ namespace Algo.Structures.Heap
         public int HeapSize { get; private set; }
 
         /// <summary>
-        /// Returns the maximum key in the heap.
+        /// Returns the minimum key in the heap.
         /// </summary>
         public T Root => _arr[0];
 
@@ -43,7 +40,7 @@ namespace Algo.Structures.Heap
         /// </summary>
         /// <param name="size">The starting size of the heap.</param>
         /// <param name="debug">Prints the whole internal array if set.</param>
-        public MaxHeap(int size, bool debug = false)
+        public MinHeap(int size, bool debug = false)
         {
             this._debug = debug;
             _arr = new T[size];
@@ -101,12 +98,12 @@ namespace Algo.Structures.Heap
         /// <returns>The new index of the key.</returns>
         public int ChangeValue(int index, T newVal)
         {
-            var biggerThanOldVal = newVal.CompareTo(_arr[index]) > 0;
+            var smallerThanOldVal = newVal.CompareTo(_arr[index]) < 0;
 
             _arr[index] = newVal;
 
             //Restore heap invariant
-            return biggerThanOldVal
+            return smallerThanOldVal
                 ? BubbleUp(index)
                 : MaxHeapify(index);
         }
@@ -127,7 +124,7 @@ namespace Algo.Structures.Heap
         private int BubbleUp(int startingIndex)
         {
             var acc = startingIndex;
-            while (_arr[acc].CompareTo(_arr[Parent(acc)]) > 0)
+            while (_arr[acc].CompareTo(_arr[Parent(acc)]) < 0)
             {
                 (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
                 acc = Parent(acc);
@@ -137,7 +134,7 @@ namespace Algo.Structures.Heap
         }
 
         /// <summary>
-        /// Returns and deletes the largest key in the heap.
+        /// Returns and deletes the smallest key in the heap.
         /// </summary>
         /// <exception cref="InvalidOperationException">thrown if heap is empty</exception>
         public T ExtractRoot()
@@ -145,9 +142,8 @@ namespace Algo.Structures.Heap
             if (HeapSize == 0) throw new InvalidOperationException("heap is empty");
 
             var root = _arr[0];
-            _arr[0] = _arr[HeapSize];
+            _arr[0] = _arr[--HeapSize];
             MaxHeapify(0);
-            HeapSize--;
             return root;
         }
 
@@ -158,7 +154,7 @@ namespace Algo.Structures.Heap
         /// <returns>The index of the key if found, otherwise -1.</returns>
         public int Search(T obj)
         {
-            if (obj.CompareTo(_arr[0]) > 0) return -1;
+            if (obj.CompareTo(_arr[0]) < 0) return -1;
 
             for (var i = 0; i < _arr.Length; i++)//TODO optimize? currently O(n) worst case. 
             {
@@ -183,16 +179,16 @@ namespace Algo.Structures.Heap
             while (true)
             {
                 //If leaf, then break
-                if (Left(index) > HeapSize)
+                if (Left(index) > HeapSize - 1)//TODO apply -1 fix to maxheap too
                 {
                     break;
                 }
 
-                //if either child is greater than parent,
-                if (_arr[index].CompareTo(_arr[Left(index)]) < 0 || _arr[index].CompareTo(_arr[Right(index)]) < 0)
+                //if either child is less than parent,
+                if (_arr[index].CompareTo(_arr[Left(index)]) > 0 || _arr[index].CompareTo(_arr[Right(index)]) > 0)
                 {
-                    //then swap the larger child with parent and run again
-                    if (_arr[Left(index)].CompareTo(_arr[Right(index)]) > 0)
+                    //then swap the smaller child with parent and run again
+                    if (_arr[Left(index)].CompareTo(_arr[Right(index)]) < 0)
                     {
                         (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
                         index = Left(index);
@@ -267,3 +263,4 @@ namespace Algo.Structures.Heap
 
     }
 }
+

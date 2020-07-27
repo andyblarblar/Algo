@@ -8,7 +8,7 @@ namespace Algo.Benchmark
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<HeapSortVsSort>();
+            var summary = BenchmarkRunner.Run<AlgoListVSList>();
         }
     }
 }
