@@ -116,8 +116,8 @@ namespace Algo.Structures.Heap
         /// </summary>
         public void Remove(int index)
         {
-            ChangeValue(index, default!);
-            HeapSize--;
+            _arr[index] = _arr[--HeapSize];
+            MaxHeapify(index);
         }
 
         /// <summary>
@@ -145,9 +145,8 @@ namespace Algo.Structures.Heap
             if (HeapSize == 0) throw new InvalidOperationException("heap is empty");
 
             var root = _arr[0];
-            _arr[0] = _arr[HeapSize];
+            _arr[0] = _arr[--HeapSize];
             MaxHeapify(0);
-            HeapSize--;
             return root;
         }
 
@@ -188,26 +187,45 @@ namespace Algo.Structures.Heap
                     break;
                 }
 
-                //if either child is greater than parent,
-                if (_arr[index].CompareTo(_arr[Left(index)]) < 0 || _arr[index].CompareTo(_arr[Right(index)]) < 0)
+                //Path if right child exists 
+                if (Right(index) < HeapSize)
                 {
-                    //then swap the larger child with parent and run again
-                    if (_arr[Left(index)].CompareTo(_arr[Right(index)]) > 0)
+                    //if either child is greater than parent,
+                    if (_arr[index].CompareTo(_arr[Left(index)]) < 0 || _arr[index].CompareTo(_arr[Right(index)]) < 0)
                     {
+                        //then swap the larger child with parent and run again
+                        if (_arr[Left(index)].CompareTo(_arr[Right(index)]) > 0)
+                        {
+                            (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
+                            index = Left(index);
+                            continue;
+                        }
+                        else
+                        {
+                            (_arr[index], _arr[Right(index)]) = (_arr[Right(index)], _arr[index]);
+                            index = Right(index);
+                            continue;
+                        }
+                    }
+
+                    break;
+                }
+                //Path if only left child exists
+                else
+                {
+                    //if child is greater than parent,
+                    if (_arr[index].CompareTo(_arr[Left(index)]) < 0)
+                    {
+                        //then swap and run again
                         (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
                         index = Left(index);
                         continue;
                     }
-                    else
-                    {
-                        (_arr[index], _arr[Right(index)]) = (_arr[Right(index)], _arr[index]);
-                        index = Right(index);
-                        continue;
-                    }
-                }
 
-                break;
+                    break;
+                }
             }
+
 
             return index;
         }

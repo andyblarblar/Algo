@@ -92,8 +92,11 @@ namespace Algo.Test
                 .Add("hiiii", 5);
 
             Assert.AreEqual("hiiii",pq.Poll());
+            Console.WriteLine(pq);
             Assert.AreEqual("hiii",pq.Poll());
+            Console.WriteLine(pq);
             Assert.AreEqual("hii",pq.Poll());
+            Console.WriteLine(pq);
             Assert.AreEqual("hi",pq.Poll());
             Assert.Catch((() => pq.Poll()));
         }
@@ -204,10 +207,13 @@ namespace Algo.Test
                 .Add("hiii", 4)
                 .Add("hiiii", 5);
 
-            pq.Remove(("hiiii", 5));
+            pq.Remove(("hiii", 4));//TODO violates heap, must move to right child of root
 
             Console.WriteLine(pq);
-            Assert.AreNotEqual("hi", pq.Peek());
+            Assert.AreEqual("hi", pq.Peek());
+            Console.WriteLine(pq.Poll());
+            Console.WriteLine(pq.Poll());
+            Console.WriteLine(pq.Poll());
         }
 
         [Test]

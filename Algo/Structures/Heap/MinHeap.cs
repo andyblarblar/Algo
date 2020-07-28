@@ -100,6 +100,9 @@ namespace Algo.Structures.Heap
         {
             var smallerThanOldVal = newVal.CompareTo(_arr[index]) < 0;
 
+            //Treat null values as lowest priority to prevent from bubbling up
+            if (newVal.Equals(default(T))) smallerThanOldVal = false;
+
             _arr[index] = newVal;
 
             //Restore heap invariant
@@ -109,12 +112,12 @@ namespace Algo.Structures.Heap
         }
 
         /// <summary>
-        /// Removes the key at index and fixes the heap.
+        /// Removes the key at index.
         /// </summary>
         public void Remove(int index)
         {
-            ChangeValue(index, default!);
-            HeapSize--;
+            _arr[index] = _arr[--HeapSize];
+            MaxHeapify(index);
         }
 
         /// <summary>
@@ -126,6 +129,9 @@ namespace Algo.Structures.Heap
             var acc = startingIndex;
             while (_arr[acc].CompareTo(_arr[Parent(acc)]) < 0)
             {
+                //Ignore null nodes
+                if(_arr[acc].Equals(default(T))) break;
+
                 (_arr[acc], _arr[Parent(acc)]) = (_arr[Parent(acc)], _arr[acc]);
                 acc = Parent(acc);
             }
@@ -179,30 +185,55 @@ namespace Algo.Structures.Heap
             while (true)
             {
                 //If leaf, then break
-                if (Left(index) > HeapSize - 1)//TODO apply -1 fix to maxheap too
+                if (Left(index) > HeapSize - 1)
                 {
                     break;
                 }
 
-                //if either child is less than parent,
-                if (_arr[index].CompareTo(_arr[Left(index)]) > 0 || _arr[index].CompareTo(_arr[Right(index)]) > 0)
+                //If default, then push down regardless
+                if (_arr[index].Equals(default(T)))
                 {
-                    //then swap the smaller child with parent and run again
-                    if (_arr[Left(index)].CompareTo(_arr[Right(index)]) < 0)
+                    (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
+                }
+
+                //Path if right child exists
+                if (Right(index) < HeapSize - 1)
+                {
+                    //if either child is less than parent,
+                    if (_arr[index].CompareTo(_arr[Left(index)]) > 0 || _arr[index].CompareTo(_arr[Right(index)]) > 0)
                     {
+                        //then swap the smaller child with parent and run again
+                        if (_arr[Left(index)].CompareTo(_arr[Right(index)]) < 0)
+                        {
+                            (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
+                            index = Left(index);
+                            continue;
+                        }
+                        else
+                        {
+                            (_arr[index], _arr[Right(index)]) = (_arr[Right(index)], _arr[index]);
+                            index = Right(index);
+                            continue;
+                        }
+                    }
+
+                    break;
+                }
+                //Path if only left child exists
+                else
+                {
+                    //if child is less than parent,
+                    if (_arr[index].CompareTo(_arr[Left(index)]) > 0)
+                    {
+                        //then swap and run again
                         (_arr[index], _arr[Left(index)]) = (_arr[Left(index)], _arr[index]);
                         index = Left(index);
                         continue;
                     }
-                    else
-                    {
-                        (_arr[index], _arr[Right(index)]) = (_arr[Right(index)], _arr[index]);
-                        index = Right(index);
-                        continue;
-                    }
+
+                    break;
                 }
 
-                break;
             }
 
             return index;

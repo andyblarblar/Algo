@@ -7,9 +7,17 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Avealov.Algo</PackageId>
-    <Description>Personal extentions to C#</Description>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>Add Path wrapper</PackageReleaseNotes>
+    <Description>A libary of datastructures, algorythms, helper classes, extentions, functional constructs and more.</Description>
+    <Version>1.1.0</Version>
+    <PackageReleaseNotes>v1.1.0
+-Add MaxHeap
+-Add PriorityQueue
+-Improve docs and tests
+-Overall code cleanup</PackageReleaseNotes>
+    <PackageProjectUrl>https://ealovega.dev</PackageProjectUrl>
+    <PackageTags>heap</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

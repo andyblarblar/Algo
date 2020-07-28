@@ -19,10 +19,11 @@ namespace Algo.Structures.Heap
         /// <summary>
         /// Creates a new priority queue.
         /// </summary>
+        /// <param name="maxBased">Weather this PriorityQueue will order based on highest value or lowest value</param>
         /// <param name="size">The starting size of this queue</param>
-        public PriorityQueue(bool MaxBased, int size = 10)
+        public PriorityQueue(bool maxBased, int size = 10)
         {
-            if (MaxBased) _heap = new MaxHeap<QueueNode<T>>(size);
+            if (maxBased) _heap = new MaxHeap<QueueNode<T>>(size);
             else _heap = new MinHeap<QueueNode<T>>(size);
         }
         
@@ -42,7 +43,7 @@ namespace Algo.Structures.Heap
         public PriorityQueue<T> Add(T element, int priority)
         {
             //Expand heap size if Capacity reached. 
-            if(_heap.HeapSize == _heap.Capacity) ExpandSizeTo(_heap.Capacity + 10);
+            if(_heap.HeapSize == _heap.Capacity) ExpandSizeTo(_heap.Capacity * 2);
 
             var index = _heap.Insert(new QueueNode<T>(element, priority));
             return this;
@@ -54,7 +55,7 @@ namespace Algo.Structures.Heap
         public PriorityQueue<T> AddRange(IEnumerable<(T, int)> keys)
         {
             //Expand heap size if Capacity reached. 
-            if(_heap.HeapSize == _heap.Capacity) ExpandSizeTo(_heap.Capacity + 10 + keys.Count());
+            if(_heap.HeapSize == _heap.Capacity) ExpandSizeTo(_heap.Capacity * 2 + keys.Count());
 
             foreach (var (data, pri) in keys)
             {
@@ -102,11 +103,11 @@ namespace Algo.Structures.Heap
         public void Remove((T, int) oldVal)
         {
             var (data, pri) = oldVal;
-            var val = new QueueNode<T>(data, pri);
+            var old = new QueueNode<T>(data, pri);
 
-            var index =_heap.Search(val);
+            var index = _heap.Search(old);
 
-            if(index < 0) throw new ArgumentException($"key: ({data},{pri}) was not found in the heap.");
+            if (index < 0) throw new ArgumentException($"key: ({data},{pri}) was not found in the heap.");
             _heap.Remove(index);
         }
 
