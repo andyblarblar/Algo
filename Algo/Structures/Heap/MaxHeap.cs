@@ -78,15 +78,8 @@ namespace Algo.Structures.Heap
             }
 
             //insert elm at end of heap
-            if (HeapSize == 0)
-            {
-                _arr[HeapSize] = key;
-            }
-            else
-            {
-                _arr[HeapSize] = key;
-            }
-
+            _arr[HeapSize] = key;
+          
             var index = BubbleUp(HeapSize);
 
             //increment here to avoid messing up index operations
