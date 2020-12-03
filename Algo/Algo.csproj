@@ -1,21 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Authors>Andrew Ealovega</Authors>
     <Company />
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Avealov.Algo</PackageId>
-    <Description>A libary of datastructures, algorythms, helper classes, extentions, functional constructs and more.</Description>
-    <Version>1.1.0</Version>
-    <PackageReleaseNotes>v1.1.0
--Add MaxHeap
--Add PriorityQueue
--Improve docs and tests
--Overall code cleanup</PackageReleaseNotes>
+    <Description>A libary of datastructures, algorithms, helper classes, extentions, functional constructs and more.</Description>
+    <Version>1.2.0</Version>
+    <PackageReleaseNotes>v1.2.0
+-Add MinHeap
+-Add Min-PriorityQueue
+-Large fixes for heaps</PackageReleaseNotes>
     <PackageProjectUrl>https://ealovega.dev</PackageProjectUrl>
-    <PackageTags>heap</PackageTags>
+    <PackageTags></PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
